@@ -3,25 +3,27 @@ import { TimerDisplay } from '@/components/TimerDisplay';
 import { TimerControls } from '@/components/TimerControls';
 import { SessionStats } from '@/components/SessionStats';
 import { SettingsSheet } from '@/components/SettingsSheet';
-import { useTimer } from '@/hooks/useTimer';
+import { useTimerWorker } from '@/hooks/useTimerWorker';
 import { useSettings } from '@/hooks/useSettings';
-import { usePomodoro } from '@/hooks/usePomodoro';
+import { usePomodoroOffline } from '@/hooks/usePomodoroOffline';
 import { useAuth } from '@/hooks/useAuth';
+import { useOfflineSync } from '@/hooks/useOfflineSync';
 import { Button } from '@/components/ui/button';
 import { BarChart3 } from 'lucide-react';
 
 const Index = () => {
   const { settings, saveSettings, isLoading: settingsLoading } = useSettings();
   const { user } = useAuth();
+  const { isOnline, isSyncing } = useOfflineSync();
   const {
     sessions,
     streaks,
     isLoading: pomodoroLoading,
     startSession,
     completeSession,
-  } = usePomodoro();
+  } = usePomodoroOffline();
 
-  const timer = useTimer(settings);
+  const timer = useTimerWorker(settings);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [showStats, setShowStats] = useState(false);
 
@@ -70,7 +72,7 @@ const Index = () => {
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
               <div className="w-4 h-4 rounded-full bg-primary-foreground"></div>
             </div>
-            <h1 className="text-xl font-bold">Zero-Distraction Pomodoro</h1>
+            <h1 className="text-xl font-bold">Mind Garden</h1>
           </div>
           
           <div className="flex items-center gap-2">
@@ -127,12 +129,14 @@ const Index = () => {
             </div>
           )}
 
-          {/* User status */}
+          {/* Connection status */}
           <div className="text-center text-sm text-muted-foreground">
-            {user ? (
-              <p>✓ Syncing across devices</p>
+            {!isOnline ? (
+              <p>📱 Offline mode • Data saved locally</p>
+            ) : user ? (
+              <p>{isSyncing ? '🔄 Syncing...' : '✓ Synced across devices'}</p>
             ) : (
-              <p>📱 Stored locally • Sign in to sync across devices</p>
+              <p>📱 Online • Sign in to sync across devices</p>
             )}
           </div>
         </div>
