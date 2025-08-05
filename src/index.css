@@ -2,35 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Zero-Distraction Pomodoro Design System
+Focus-first color palette with Material 3 inspired tokens
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 5%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 5%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Focus work session - deep tomato red */
+    --primary: 15 85% 55%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 15 100% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Short break - calming green */
+    --secondary: 142 70% 45%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-glow: 142 85% 55%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Long break - restful blue */
+    --tertiary: 220 85% 55%;
+    --tertiary-foreground: 0 0% 98%;
+    --tertiary-glow: 220 100% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 15 85% 55%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Timer specific colors */
+    --timer-ring: 0 0% 90%;
+    --progress-shadow: 15 85% 55% / 0.3;
+    --success: 142 70% 45%;
+    --warning: 38 92% 50%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
@@ -101,5 +116,41 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Timer animations */
+  @keyframes progress-glow {
+    0%, 100% { 
+      filter: drop-shadow(0 0 8px hsl(var(--progress-shadow)));
+    }
+    50% { 
+      filter: drop-shadow(0 0 16px hsl(var(--progress-shadow)));
+    }
+  }
+
+  @keyframes pulse-button {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @keyframes streak-celebration {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(5deg); }
+    75% { transform: scale(1.2) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+}
+
+@layer components {
+  .timer-glow {
+    animation: progress-glow 2s ease-in-out infinite;
+  }
+
+  .pulse-active {
+    animation: pulse-button 1.5s ease-in-out infinite;
+  }
+
+  .streak-celebrate {
+    animation: streak-celebration 0.6s ease-out;
   }
 }
