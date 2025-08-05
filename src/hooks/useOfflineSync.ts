@@ -29,16 +29,20 @@ export const useOfflineSync = () => {
     
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setIsSyncing(false);
+        return;
+      }
 
       // Sync unsynced sessions
       const unsyncedSessions = await getUnsyncedSessions();
+      let syncedCount = 0;
       
       for (const session of unsyncedSessions) {
         try {
           const { error } = await supabase
             .from('sessions')
-            .insert({
+            .upsert({
               id: session.id,
               user_id: session.user_id,
               type: session.type,
@@ -51,20 +55,43 @@ export const useOfflineSync = () => {
 
           if (!error) {
             await markSessionSynced(session.id);
+            syncedCount++;
           }
         } catch (error) {
-          // Skip this session and continue with others
+          console.warn('Failed to sync session:', session.id);
         }
       }
 
-      if (unsyncedSessions.length > 0) {
+      // Update user streaks on Supabase after syncing sessions
+      if (syncedCount > 0) {
+        try {
+          // Get current local streaks
+          const localStreaks = await db.streaks.get(user.id);
+          if (localStreaks) {
+            await supabase
+              .from('user_streaks')
+              .upsert({
+                user_id: user.id,
+                current_streak: localStreaks.current_streak,
+                longest_streak: localStreaks.longest_streak,
+                last_session_date: localStreaks.last_session_date,
+                total_sessions: localStreaks.total_sessions,
+                total_focus_minutes: localStreaks.total_focus_minutes,
+                achievements: localStreaks.achievements,
+              });
+          }
+        } catch (error) {
+          console.warn('Failed to sync streaks');
+        }
+      }
+
+      if (syncedCount > 0) {
         toast({
           title: "Data synced",
-          description: `${unsyncedSessions.length} sessions synced to cloud`,
+          description: `${syncedCount} sessions synced to cloud`,
         });
       }
     } catch (error) {
-      // Error handled via toast notification
       toast({
         title: "Sync failed",
         description: "Will retry when connection improves",

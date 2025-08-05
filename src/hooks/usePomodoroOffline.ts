@@ -128,16 +128,18 @@ export const usePomodoroOffline = () => {
       const session = await db.sessions.get(sessionId);
       
       if (session && session.type === 'work') {
+        const newStreak = state.streaks.last_session_date === today 
+          ? state.streaks.current_streak 
+          : state.streaks.current_streak + 1;
+          
         const updatedStreaks = {
           ...state.streaks,
           total_sessions: state.streaks.total_sessions + 1,
           total_focus_minutes: state.streaks.total_focus_minutes + session.duration_minutes,
-          current_streak: state.streaks.last_session_date === today 
-            ? state.streaks.current_streak 
-            : state.streaks.current_streak + 1,
+          current_streak: newStreak,
           longest_streak: Math.max(
             state.streaks.longest_streak, 
-            state.streaks.current_streak + 1
+            newStreak
           ),
           last_session_date: today,
           updated_at: new Date().toISOString(),
