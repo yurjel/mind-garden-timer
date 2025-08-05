@@ -14,7 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          duration_minutes: number
+          id: string
+          mood_rating: number | null
+          started_at: string
+          type: string
+          updated_at: string
+          user_id: string
+          was_completed: boolean
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          mood_rating?: number | null
+          started_at?: string
+          type: string
+          updated_at?: string
+          user_id: string
+          was_completed?: boolean
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          duration_minutes?: number
+          id?: string
+          mood_rating?: number | null
+          started_at?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+          was_completed?: boolean
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          auto_resume: boolean
+          created_at: string
+          long_break_minutes: number
+          sessions_until_long_break: number
+          short_break_minutes: number
+          sound_theme: string
+          updated_at: string
+          user_id: string
+          vibrate_enabled: boolean
+          work_minutes: number
+        }
+        Insert: {
+          auto_resume?: boolean
+          created_at?: string
+          long_break_minutes?: number
+          sessions_until_long_break?: number
+          short_break_minutes?: number
+          sound_theme?: string
+          updated_at?: string
+          user_id: string
+          vibrate_enabled?: boolean
+          work_minutes?: number
+        }
+        Update: {
+          auto_resume?: boolean
+          created_at?: string
+          long_break_minutes?: number
+          sessions_until_long_break?: number
+          short_break_minutes?: number
+          sound_theme?: string
+          updated_at?: string
+          user_id?: string
+          vibrate_enabled?: boolean
+          work_minutes?: number
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          achievements: string[]
+          created_at: string
+          current_streak: number
+          last_session_date: string | null
+          longest_streak: number
+          total_focus_minutes: number
+          total_sessions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achievements?: string[]
+          created_at?: string
+          current_streak?: number
+          last_session_date?: string | null
+          longest_streak?: number
+          total_focus_minutes?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achievements?: string[]
+          created_at?: string
+          current_streak?: number
+          last_session_date?: string | null
+          longest_streak?: number
+          total_focus_minutes?: number
+          total_sessions?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
