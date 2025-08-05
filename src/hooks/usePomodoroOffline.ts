@@ -71,7 +71,6 @@ export const usePomodoroOffline = () => {
           isLoading: false,
         });
       } catch (error) {
-        console.error('Failed to load offline data:', error);
         setState(prev => ({ ...prev, isLoading: false }));
       }
     };
@@ -103,7 +102,6 @@ export const usePomodoroOffline = () => {
 
       return sessionId;
     } catch (error) {
-      console.error('Failed to start session:', error);
       toast({
         title: "Error",
         description: "Failed to start session",
@@ -163,7 +161,6 @@ export const usePomodoroOffline = () => {
         });
       }
     } catch (error) {
-      console.error('Failed to complete session:', error);
       toast({
         title: "Error",
         description: "Failed to complete session",

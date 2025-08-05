@@ -53,7 +53,7 @@ export const useOfflineSync = () => {
             await markSessionSynced(session.id);
           }
         } catch (error) {
-          console.error('Failed to sync session:', session.id, error);
+          // Skip this session and continue with others
         }
       }
 
@@ -64,7 +64,7 @@ export const useOfflineSync = () => {
         });
       }
     } catch (error) {
-      console.error('Sync failed:', error);
+      // Error handled via toast notification
       toast({
         title: "Sync failed",
         description: "Will retry when connection improves",

@@ -64,6 +64,11 @@ export const db = new MindGardenDB();
 
 // Helper functions for offline operations
 export const saveSessionOffline = async (session: Omit<OfflineSession, 'id' | 'synced' | 'created_at' | 'updated_at'>) => {
+  // Validate session data
+  if (!session.user_id || !session.type || !session.duration_minutes) {
+    throw new Error('Invalid session data');
+  }
+  
   const now = new Date().toISOString();
   const id = crypto.randomUUID();
   
@@ -79,6 +84,11 @@ export const saveSessionOffline = async (session: Omit<OfflineSession, 'id' | 's
 };
 
 export const saveSettingsOffline = async (settings: Omit<OfflineSettings, 'created_at' | 'updated_at'>) => {
+  // Validate settings data
+  if (!settings.user_id || settings.work_minutes < 1 || settings.work_minutes > 60) {
+    throw new Error('Invalid settings data');
+  }
+  
   const now = new Date().toISOString();
   
   await db.settings.put({

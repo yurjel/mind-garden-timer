@@ -45,7 +45,6 @@ export const useAuth = () => {
       const { error } = await supabase.auth.signInAnonymously();
       if (error) throw error;
     } catch (error: any) {
-      console.error('Error signing in anonymously:', error);
       toast({
         title: "Error",
         description: "Failed to create anonymous session.",
@@ -55,6 +54,17 @@ export const useAuth = () => {
   };
 
   const signInWithEmail = async (email: string) => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email,
@@ -70,10 +80,9 @@ export const useAuth = () => {
         description: "We sent you a sign-in link.",
       });
     } catch (error: any) {
-      console.error('Error signing in with email:', error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to send sign-in link.",
         variant: "destructive",
       });
     }
@@ -84,7 +93,6 @@ export const useAuth = () => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {
-      console.error('Error signing out:', error);
       toast({
         title: "Error",
         description: "Failed to sign out.",

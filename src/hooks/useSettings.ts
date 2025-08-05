@@ -45,7 +45,6 @@ export const useSettings = () => {
             .maybeSingle();
 
           if (error && error.code !== 'PGRST116') {
-            console.error('Error loading settings:', error);
             toast({
               title: "Error loading settings",
               description: "Using default settings instead.",
@@ -71,7 +70,7 @@ export const useSettings = () => {
             try {
               setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
             } catch (error) {
-              console.error('Error parsing saved settings:', error);
+              // Silently fall back to default settings
             }
           }
         }
@@ -115,7 +114,6 @@ export const useSettings = () => {
           });
 
         if (error) {
-          console.error('Error saving settings to Supabase:', error);
           toast({
             title: "Error saving settings",
             description: "Your settings may not be synced across devices.",
@@ -127,7 +125,6 @@ export const useSettings = () => {
         localStorage.setItem('pomodoroSettings', JSON.stringify(updatedSettings));
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
       toast({
         title: "Error saving settings",
         description: "Please try again.",
